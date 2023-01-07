@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorator="template">
+<link rel="stylesheet" type="text/css"
+href="webjars/bootstrap/5.1.3/css/bootstrap.min.css" />
+ <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+ <script type="text/javascript"
+src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+<head>
+<meta charset="utf-8">
+<title>Ajout des Users</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <!-- Brand -->
+ <a class="navbar-brand" href="#" style="margin-left: 10px;">Gestion Stages</a>
+ <!-- Links -->
+ <ul class="navbar-nav">
+ <li class="nav-item">
+ <a class="nav-link" th:href="@{ListeStages}" >ACCUEIL</a>
+ </li>
+ <!-- Dropdown -->
+ <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ Stages
+ </a>
+ <div class="dropdown-menu">
+<a sec:authorize="hasAnyRole('ADMIN', 'AGENT')" class="dropdown-item"  th:href="@{showCreate}">Ajouter stage</a>
+ <a class="dropdown-item" th:href="@{ListeStages}">Lister stages</a>
+ </div>
+ </li>
+  <li class="nav-item dropdown" >
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ Etudiants
+ </a>
+ <div class="dropdown-menu">
+<a sec:authorize="hasAnyRole('ADMIN', 'AGENT')" class="dropdown-item"  th:href="@{showCreateE}">Ajouter etudiants</a>
+ <a class="dropdown-item" th:href="@{ListeEtudiants}">Lister etudiants</a>
+ </div>
+ </li>
+    <li class="nav-item dropdown" >
+          <a sec:authorize="hasAnyRole('ADMIN')" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ Users
+ </a>
+ <div  class="dropdown-menu">
+<a sec:authorize="hasAnyRole('ADMIN')" class="dropdown-item"  th:href="@{showCreateU}">Ajouter User</a>
+ <a sec:authorize="hasAnyRole('ADMIN')"  class="dropdown-item" th:href="@{ListeUsers}">Lister Users</a>
+ </div >
+ </li>
+ </ul>
+ 
+ <!---->
+ 
+
+<form th:action="@{search2}" method="get"  class="d-flex" style="margin-left: 150px; margin-right:10px;">
+        <input class="form-control me-2" type="text" placeholder="Recherche  par Type"   aria-label="Chercher"  name="keyword">
+        <button class="btn btn-outline-primary"  type="submit">Chercher</button>
+      </form>
+  <form th:action="@{search}" method="get"  class="d-flex" style="margin-left: 0px; margin-right:20px;" >
+        <input class="form-control me-2" type="text" placeholder="Recherche  par Etudiant"   aria-label="Chercher" name="keyword">
+        <button class="btn btn-outline-dark"  type="submit">Chercher</button>
+      </form>
+       <ul class="navbar-nav ml-auto" >
+ <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span sec:authentication="name"></span>
+ </a>
+ 
+ <div class="dropdown-menu">
+ <a sec:authorize="!isAuthenticated()" class="dropdown-item"
+th:href="@{login}">login</a>
+ <a sec:authorize="isAuthenticated()" class="dropdown-item"
+th:href="@{logout}">Deconnexion</a>
+ <a class="dropdown-item" href="#">Profil</a>
+ </div>
+ </li>
+ </ul>
+</nav>
+<div layout:fragment="Mycontent">
+<div class="container mt-5">
+<div class="card">
+ <div class="card-header" th:if="${mode=='new'}"> Ajout d'un User </div>
+ <div class="card-header" th:if="${mode=='edit'}">Modification des Users
+</div>
+<div class="card-body">
+<form th:action="@{saveUser}" method="post" id="myform">
+ <div class="form-group">
+<label class="control-label" hidden>ID User:</label>
+<input type="hidden" name="user_id" class="form-control"
+th:value="${user.user_id}" />
+ </div>
+ <div class="form-group">
+<label class="control-label">Nom User :</label>
+<input type="text" name="username" class="form-control"
+th:value="${user.username}" />
+<span th:errors=${user.username} class="text-danger"> </span>
+</div>
+ <div class="form-group">
+<label class="control-label">Enabled :</label>
+<input type="number" name="enabled" class="form-control"
+th:value="${user.enabled}" />
+<span th:errors=${user.enabled} class="text-danger"> </span>
+</div>					
+	<div class="form-group">
+							<label class="control-label">role :</label> 
+							<select  type="text" name="s" class="form-control"   >
+								<option th:each="e:${roles}" th:if="${mode=='edit'}"
+									th:value="${e.role_id}" th:text="${e.role}"></option>
+								<option th:each="e:${roles}" th:if="${mode=='new'}"
+									th:value="${e.role_id}" th:text="${e.role}" ></option>
+							</select>
+						</div>
+						
+						
+
+<div class="form-group">
+<label class="control-label">Mot de passe:</label>
+<input type="password" name="password" class="form-control"
+th:value="${user.password}" />
+<span th:errors=${user.password} class="text-danger"> </span>
+</div>
+	<div class="form-group">
+<label class="control-label">Confirmer mot de passe:</label>
+<input type="password" name="password2" class="form-control"
+th:value="${user.password}" />
+<span th:errors=${user.password} class="text-danger"> </span>
+</div>
+<button type="submit"  class="btn btn-primary">Valider</button>
+</div>
+</form>
+</div>
+ </div>
+ </div>
+ </div>
+</body>
+</html>

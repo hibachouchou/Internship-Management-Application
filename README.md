@@ -1,2 +1,2 @@
-# Spring boot CRUD APP
+# Spring Boot CRUD APP (Intern/Student)
  
